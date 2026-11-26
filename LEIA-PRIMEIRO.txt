@@ -1,0 +1,40 @@
+IVÃO NAVEG — PACOTE ÚNICO CONSOLIDADO (BASE MVP 0.7)
+====================================================
+
+CONTEÚDO
+- index.html: cópia do MVP 0.7 recuperado, com o script de integração incluído ao final.
+- api/aisweb.js: proxy server-side para AISWEB; não expõe credenciais ao navegador.
+- api/health.js: verifica apenas a presença das variáveis secretas.
+- js/aisweb-integration.js: acrescenta consultas às telas existentes sem remover botões/funções locais.
+- vercel.json: configuração das funções serverless.
+
+INSTALAÇÃO — UM ÚNICO DEPLOY
+1. Faça backup do repositório atual.
+2. Extraia o ZIP na raiz do repositório conectado à Vercel, mesclando as pastas api/ e js/.
+3. O index.html incluído parte do MVP 0.7 recuperado em 17/10/2026. Se o index.html publicado tiver alterações posteriores, NÃO o sobrescreva: aplique somente a inclusão do script abaixo ao index.html atual.
+4. Confirme na Vercel (Settings > Environment Variables) os nomes AISWEB_API_KEY e AISWEB_API_PASS. Não copie os valores para o GitHub, HTML ou chat.
+5. Faça um único commit e aguarde o deploy da Vercel.
+6. Abra /api/health. A resposta informa apenas presença das variáveis; não prova autenticação.
+7. Teste cada consulta com ICAO conhecido e compare a resposta com o AISWEB oficial.
+
+INCLUSÃO MANUAL DO SCRIPT (caso preserve um index.html mais novo)
+Antes de </body>, acrescente:
+<script src="/js/aisweb-integration.js"></script>
+
+ESCOPO E LIMITES DE VALIDAÇÃO
+- ROTAER: parâmetros aero e filtros documentados na API pública AISWEB.
+- METAR/TAF: a área met está prevista na API. Este pacote envia IcaoCode e type=metar/taf como parâmetros iniciais; confirme os nomes/valores exatos com a documentação autorizada/DECEA e com resposta real.
+- NOTAM: a área notam está prevista na API. Este pacote envia IcaoCode como filtro inicial; confirme o parâmetro exato com a documentação autorizada/DECEA e com resposta real.
+- A API AISWEB retorna XML; o pacote apresenta a resposta original sem inventar interpretação dos campos.
+- A consulta ROTAER, METAR, TAF e NOTAM só pode ser considerada validada após resposta real, com credenciais autorizadas e conferência da vigência.
+- Se a área MET não fornecer meteorologia necessária, a API REDEMET possui credencial/documentação próprias; não reutilize a chave AISWEB.
+
+SEGURANÇA E OPERAÇÃO
+- Nunca publique API Key/API Pass no HTML, JavaScript, ZIP público, GitHub ou mensagens.
+- /api/health não testa autenticação.
+- Falha, XML vazio ou erro de parâmetro não significa que não existam METAR, TAF ou NOTAM.
+- O IVÃO NAVEG é ferramenta auxiliar e não substitui briefing, publicações, cartas, procedimentos, equipamentos ou fontes oficiais vigentes.
+
+DOCUMENTAÇÃO OFICIAL
+https://aisweb.decea.mil.br/?i=publicacoes&p=api
+https://documenter.getpostman.com/view/7201070/SzKQyg3H
